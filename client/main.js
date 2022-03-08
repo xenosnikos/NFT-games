@@ -71,9 +71,8 @@ function renderPet(id, data) {
     let percentageString = (percentageLeft * 100) + "%";
     $(`#pet_${id} .progress-bar`).css("width", percentageString);
 
-    if (now > deathTime) {
-      //NFT DEAD
-
+    if (percentageLeft < 0) {
+      clearInterval(interval);
     }
   }, 5000)
 
