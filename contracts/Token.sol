@@ -19,6 +19,10 @@ contract Token is ERC721, Ownable {
         ERC721(name, symbol)
     {}
 
+    function getTokenDetails(uint256 tokenId) public view returns (Pet memory) {
+        return _tokenDetails[tokenId];
+    }
+
     function mint(
         uint8 damage,
         uint8 magic,
@@ -33,6 +37,29 @@ contract Token is ERC721, Ownable {
         Pet storage pet = _tokenDetails[nextId];
         require(pet.lastMeal + pet.endurance > block.timestamp);
         _tokenDetails[nextId].lastMeal = block.timestamp;
+    }
+
+    function getAllTokensForUser(address user)
+        public
+        view
+        returns (uint256[] memory)
+    {
+        uint256 tokenCount = balanceOf(user);
+        if (tokenCount == 0) {
+            return new uint256[](0);
+        } else {
+            uint256[] memory result = new uint256[](tokenCount);
+            uint256 resultIndex = 0;
+            uint256 totalPets = nextId;
+            uint256 i;
+            for (i = 0; i < totalPets; i++) {
+                if (ownerOf(i) == user) {
+                    result[] = i;
+                    resultIndex++;
+                }
+            }
+            return result;
+        }
     }
 
     function _beforeTokenTransfer(
